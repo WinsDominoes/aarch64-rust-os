@@ -30,3 +30,7 @@ Linker.ld tells to linker how the memory is laid out in this ELF.
 - what permissions the segments have (read, write, execute). Remember that this can be efficiently enforced by the processor: How does x86 paging work?
 
 Ref: [https://stackoverflow.com/questions/14361248/whats-the-difference-of-section-and-segment-in-elf-file-format](https://stackoverflow.com/questions/14361248/whats-the-difference-of-section-and-segment-in-elf-file-format)
+
+Makefile - build everything jingle bells
+
+`boot.s` -> assembly file -> first code that runs when kernel is loaded -> set up stack and jump -> Rust code 

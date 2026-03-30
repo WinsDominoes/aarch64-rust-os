@@ -4,11 +4,14 @@
 ## DECLARE SOME ENVIRONMENTS
 
 # Target arch & toolchain
+CRATE_NAME := aarch64_rust_os
 TARGET := aarch64-unknown-none
 AS := aarch64-linux-gnu-as ## ASSEMBLER
 CC := aarch64-linux-gnu-gcc-14
 CFLAGS := -Wall -ggdb -ffreestanding -nostdlib -I./include
-LD := rust-lld
+#LD := "/root/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/x86_64-unknown-linux-gnu/bin/rust-lld"
+#LD := rust-lld
+LD := ld.lld
 QEMU := qemu-system-aarch64
 VERSION := debug
 
@@ -22,7 +25,7 @@ LINKER_SCRIPT := linker.ld
 # oOutput filenames
 BOOT_OBJ := $(ASM_DIR)/boot.o
 CRATE_NAME := $(shell cargo metadata --no-deps --format-version 1 | jq -r '.packages[0].name')
-KERNEL_OBJ := target/$(TARGET)/$(VERSION)/lib$(CRATE_NAME).a
+KERNEL_OBJ := target/$(TARGET)/$(VERSION)/libaarch64_rust_os.a
 KERNEL_ELF := kernel.elf
 
 # QEMU options - vm bullshit
@@ -43,7 +46,7 @@ $(KERNEL_OBJ): $(KERNEL_RS) 			## entry
 
 # Link kernel object & boot object -> ELF
 $(KERNEL_ELF): $(BOOT_OBJ) $(KERNEL_OBJ) $(LINKER_SCRIPT)
-	$(LD) -flavor gnu -o $(KERNEL_ELF) -T $(LINKER_SCRIPT) -o $@ $(BOOT_OBJ) $(KERNEL_OBJ)
+	$(LD) -flavor ld -m aarch64elf -o $(KERNEL_ELF) -T $(LINKER_SCRIPT) -o $@ $(BOOT_OBJ) $(KERNEL_OBJ)
 
 # Run kernel with QEMU
 run: $(KERNEL_ELF)

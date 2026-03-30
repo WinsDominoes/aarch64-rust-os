@@ -11,7 +11,7 @@ use core::panic::PanicInfo;
 
 const UART: *mut u8 = 0x0900_0000 as *mut u8; 
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn kmain()
 {
     print(b"Hello, from Rust!\n");

@@ -15,3 +15,4 @@ debug = false
 
 [lib]
 crate-type = ["staticlib"] # static library not freaking executable
+

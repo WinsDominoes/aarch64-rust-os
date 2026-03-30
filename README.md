@@ -34,3 +34,20 @@ Ref: [https://stackoverflow.com/questions/14361248/whats-the-difference-of-secti
 Makefile - build everything jingle bells
 
 `boot.s` -> assembly file -> first code that runs when kernel is loaded -> set up stack and jump -> Rust code 
+`lib.rs` -> kernel that talks directly to the UART at address 0x0900_0000, which QEMU maps to a PL011 UART on the virt machine.
+
+```asm
+.section .text
+.global _start
+
+_start:
+    ldr x30, =stack_top ;; x30 -> Link Register of ARM64 arch. 
+                        ;; link register -> used for storing the return address of a subroutine or function call
+    mov sp, x30         ;; mov value x30 -> sp (stack pointer) points to the stop of the stack
+                        ;; to show where in the stack we currently are (in the memory)
+    bl kmain()          ;; bl -> call kmain()
+    b .                 ;; go to . (LABEL)
+```
+
+### rust-lld issue
+Use `ld.lld` and set the filename properly. [https://github.com/krinkinmu/aarch64/blob/master/Makefile](https://github.com/krinkinmu/aarch64/blob/master/Makefile)

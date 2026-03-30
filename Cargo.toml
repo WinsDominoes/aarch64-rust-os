@@ -1,0 +1,17 @@
+[package]
+name = "aarch64-rust-os"
+version = "0.0.1"
+authors = ["Winnie The Pooh"]
+edition = "2024"
+
+[profile.dev]
+opt-level = 0
+debug = true
+
+[profile.release]
+opt-level = 3
+lto = true # Link-time optimize
+debug = false
+
+[lib]
+crate-type = ["staticlib"] # static library not freaking executable

@@ -21,7 +21,10 @@ rustup target add aarch64-unknown-none
 3. Run `make run`
 
 ## Timeline of my craziness
-- 30/3/2026
+### 30/3/2026
+IT RUNS!!!
+
+![make run test](assets/img/aarch64-qemu-test.png)
 
 sooo... I have to create a bunch of files like assembly and such. I have to use another Rust distrobox
 
@@ -32,7 +35,7 @@ Section - info for linking
 
 Particularly important informations are (besides lengths):
 
-### Section vs Segments in ELF
+#### Section vs Segments in ELF
 - Sections for linking and Segments for Execution
 
 Sections:

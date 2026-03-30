@@ -1,6 +1,25 @@
 # aarch64-rust-os
 I want to do something absolutely crazy at the age of 18 years of age and no one can stop me. 
 
+## RUN
+1. Instal this bullshit
+```bash
+sudo apt update && sudo apt upgrade
+# QEMU for emulation
+sudo apt install qemu-system-aarch64
+# Binutils (objdump, etc.)
+sudo apt install binutils-aarch64-linux-gnu
+# Cross-compiler
+sudo apt install gcc-14-aarch64-linux-gnu
+```
+2. Install Rust & aarch64 bare-metal target (This lets us compile Rust code for a freestanding, no-OS environment.)
+```bash
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+source $HOME/.cargo/env
+rustup target add aarch64-unknown-none
+```
+3. Run `make run`
+
 ## Timeline of my craziness
 - 30/3/2026
 
@@ -34,8 +53,6 @@ Ref: [https://stackoverflow.com/questions/14361248/whats-the-difference-of-secti
 Makefile - build everything jingle bells
 
 `boot.s` -> assembly file -> first code that runs when kernel is loaded -> set up stack and jump -> Rust code 
-`lib.rs` -> kernel that talks directly to the UART at address 0x0900_0000, which QEMU maps to a PL011 UART on the virt machine.
-
 ```asm
 .section .text
 .global _start
@@ -49,5 +66,30 @@ _start:
     b .                 ;; go to . (LABEL)
 ```
 
-### rust-lld issue
+`lib.rs` -> kernel that talks directly to the UART at address 0x0900_0000, which QEMU maps to a PL011 UART on the virt machine.
+
+#### UART???
+> SPI and UART are both types of interfaces. UART (Universal Asynchronous Receiver Transmitter) means just that, it’s a generic interface for transferring information in one, or two directions, asynchronously (i.e. no clock is transferred across the interface). - [Reddit](https://www.reddit.com/r/embedded/comments/oxrkh4/precisely_what_is_uartusartand_spi/)
+
+### rust-lld issue (in the Makefile)
 Use `ld.lld` and set the filename properly. [https://github.com/krinkinmu/aarch64/blob/master/Makefile](https://github.com/krinkinmu/aarch64/blob/master/Makefile)
+
+## References
+- [From Scratch: An AArch64 OS in Rust - Hello World - https://jcomes.org/aarch64-os-hello_world](https://jcomes.org/aarch64-os-hello_world)
+- [Basic ARM64 Assembly Guide - https://www.rose-hulman.edu/class/csse/csse132/2526c/ARM_cheatsheet.pdf](https://www.rose-hulman.edu/class/csse/csse132/2526c/ARM_cheatsheet.pdf)
+- [General Register ARM64 diagram - https://miro.medium.com/v2/1*Fs-PmlRPoMIJ22p0737F9Q.png](https://miro.medium.com/v2/1*Fs-PmlRPoMIJ22p0737F9Q.png)
+- [ARMv8-AArch64 Registers and Instruction Set- https://en.eeworld.com.cn/news/mcu/eic555596.html](https://en.eeworld.com.cn/news/mcu/eic555596.html)
+- [Registers of the ARM64 Register Architecture](https://eclecticlight.co/wp-content/uploads/2021/06/armregisterarch.pdf)
+- [Code in ARM Assembly: Registers explained - https://eclecticlight.co/2021/06/16/code-in-arm-assembly-registers-explained/](https://eclecticlight.co/2021/06/16/code-in-arm-assembly-registers-explained/)
+- [Adding a little bit of Rust to AARCH64 - https://krinkinmu.github.io/2020/12/13/adding-rust-to-aarch64.html](https://krinkinmu.github.io/2020/12/13/adding-rust-to-aarch64.html)
+- [krinkinmu/arch64](https://github.com/krinkinmu/aarch64)
+- [Memory Management - OSDevWiki](https://wiki.osdev.org/Memory_management)
+- [QEMU AArch64 Virt Bare Bones - https://wiki.osdev.org/QEMU_AArch64_Virt_Bare_Bones](https://wiki.osdev.org/QEMU_AArch64_Virt_Bare_Bones)
+- [ELF Format Diagram - Wikipedia Media](https://en.wikipedia.org/wiki/Executable_and_Linkable_Format#/media/File:Elf-layout--en.svg)
+- [Understanding ELF File Layout in Memory - https://chessman7.substack.com/p/understanding-elf-file-layout-in](https://chessman7.substack.com/p/understanding-elf-file-layout-in)
+- [ELF - Bottom UPCS](https://bottomupcs.com/ch08s03.html)
+- [What's the difference of section and segment in ELF file format](https://stackoverflow.com/questions/14361248/whats-the-difference-of-section-and-segment-in-elf-file-format)
+- [cirosantilli/notes - Section vs segment](https://github.com/cirosantilli/notes/blob/master/stack-overflow/section-vs-segment.md)
+- [Precisely, what is UART/USART (and SPI?)](https://www.reddit.com/r/embedded/comments/oxrkh4/precisely_what_is_uartusartand_spi/)
+- [UART: A Hardware Communication Protocol Understanding Universal Asynchronous Receiver/Transmitter](https://www.analog.com/en/resources/analog-dialogue/articles/uart-a-hardware-communication-protocol.html)
+- [Universal asynchronous receiver-transmitter - Wikipedia](https://en.wikipedia.org/wiki/Universal_asynchronous_receiver-transmitter)
